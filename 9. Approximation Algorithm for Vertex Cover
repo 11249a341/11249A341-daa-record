@@ -1,1 +1,64 @@
+PROGRAM:
+#include <stdio.h>
 
+#define V 5
+#define E 6
+
+// Structure to store edges
+struct Edge {
+    int u, v;
+};
+
+// Function to check if edge is already covered
+int isCovered(int u, int v, int cover[]) {
+    return (cover[u] == 1 || cover[v] == 1);
+}
+
+// Approximation algorithm for Vertex Cover
+void vertexCover(struct Edge edges[]) {
+    int cover[V] = {0};  // 0 = not in cover, 1 = in cover
+
+    printf("Selected edges and vertices:\n");
+
+    for (int i = 0; i < E; i++) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+
+        // If edge is not covered
+        if (!isCovered(u, v, cover)) {
+            cover[u] = 1;
+            cover[v] = 1;
+
+            printf("Edge (%d, %d) -> add %d and %d\n", u, v, u, v);
+        }
+    }
+
+    printf("\nVertex Cover Set: ");
+    for (int i = 0; i < V; i++) {
+        if (cover[i])
+            printf("%d ", i);
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Edge edges[E] = {
+        {0, 1},
+        {0, 2},
+        {1, 3},
+        {2, 3},
+        {3, 4},
+        {1, 4}
+    };
+
+    vertexCover(edges);
+
+    return 0;
+}
+OUTPUT:
+Selected edges and vertices:
+Edge (0, 1) -> add 0 and 1
+Edge (2, 3) -> add 2 and 3
+Edge (3, 4) -> add 3 and 4
+
+Vertex Cover Set: 0 1 2 3 4
