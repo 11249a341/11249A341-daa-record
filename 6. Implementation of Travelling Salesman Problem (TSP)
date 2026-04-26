@@ -1,1 +1,67 @@
+#include <stdio.h>
+#include <limits.h>
 
+#define V 4  // Number of cities
+
+// Function to swap two integers
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to calculate minimum of two values
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// Function to calculate cost of current path
+int calculateCost(int graph[V][V], int path[]) {
+    int cost = 0;
+
+    for (int i = 0; i < V - 1; i++) {
+        cost += graph[path[i]][path[i + 1]];
+    }
+
+    // Return to starting city
+    cost += graph[path[V - 1]][path[0]];
+
+    return cost;
+}
+
+// Generate permutations and find minimum cost
+void tsp(int graph[V][V], int path[], int start, int *minCost) {
+    if (start == V) {
+        int cost = calculateCost(graph, path);
+        if (cost < *minCost) {
+            *minCost = cost;
+        }
+        return;
+    }
+
+    for (int i = start; i < V; i++) {
+        swap(&path[start], &path[i]);
+        tsp(graph, path, start + 1, minCost);
+        swap(&path[start], &path[i]); // backtrack
+    }
+}
+
+int main() {
+    int graph[V][V] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int path[V] = {0, 1, 2, 3};
+    int minCost = INT_MAX;
+
+    tsp(graph, path, 1, &minCost);  // Fix starting city as 0
+
+    printf("Minimum travelling cost: %d\n", minCost);
+
+    return 0;
+}
+OUTPUT:
+Minimum travelling cost: 80
