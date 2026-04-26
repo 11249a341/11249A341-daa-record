@@ -1,1 +1,63 @@
+PROGRAM:
+#include <stdio.h>
 
+void firstFit(int weights[], int n, int capacity) {
+    int bin[n];  // Stores remaining capacity of bins
+    int binCount = 0;
+
+    // Initialize all bins as empty
+    for (int i = 0; i < n; i++)
+        bin[i] = 0;
+
+    // Place each item
+    for (int i = 0; i < n; i++) {
+        int j;
+
+        // Try to fit item in existing bins
+        for (j = 0; j < binCount; j++) {
+            if (bin[j] + weights[i] <= capacity) {
+                bin[j] += weights[i];
+                printf("Item %d (weight %d) -> Bin %d\n", i + 1, weights[i], j + 1);
+                break;
+            }
+        }
+
+        // If item doesn't fit in any bin, create new bin
+        if (j == binCount) {
+            bin[binCount] = weights[i];
+            printf("Item %d (weight %d) -> Bin %d\n", i + 1, weights[i], binCount + 1);
+            binCount++;
+        }
+    }
+
+    printf("\nTotal bins used: %d\n", binCount);
+}
+
+int main() {
+    int n, capacity;
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+
+    int weights[n];
+
+    printf("Enter weights of items:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &weights[i]);
+    }
+
+    printf("Enter bin capacity: ");
+    scanf("%d", &capacity);
+
+    firstFit(weights, n, capacity);
+
+    return 0;
+}
+OUTPUT:
+Item 1 (weight 4) -> Bin 1
+Item 2 (weight 8) -> Bin 2
+Item 3 (weight 1) -> Bin 1
+Item 4 (weight 4) -> Bin 1
+Item 5 (weight 2) -> Bin 2
+
+Total bins used: 2
