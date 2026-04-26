@@ -1,1 +1,63 @@
+PROGRAM:
+#include <stdio.h>
 
+// Structure for an item
+struct Item {
+    int value;
+    int weight;
+};
+
+// Function to swap items
+void swap(struct Item *a, struct Item *b) {
+    struct Item temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Sort items by value/weight ratio (descending) using simple bubble sort
+void sortItems(struct Item items[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            float r1 = (float)items[j].value / items[j].weight;
+            float r2 = (float)items[j + 1].value / items[j + 1].weight;
+
+            if (r1 < r2) {
+                swap(&items[j], &items[j + 1]);
+            }
+        }
+    }
+}
+
+// Function to calculate maximum value
+float fractionalKnapsack(int capacity, struct Item items[], int n) {
+    sortItems(items, n);
+
+    float totalValue = 0.0;
+
+    for (int i = 0; i < n; i++) {
+        if (capacity >= items[i].weight) {
+            // Take full item
+            capacity -= items[i].weight;
+            totalValue += items[i].value;
+        } else {
+            // Take fraction
+            totalValue += items[i].value * ((float)capacity / items[i].weight);
+            break;
+        }
+    }
+
+    return totalValue;
+}
+
+int main() {
+    struct Item items[] = {{60, 10}, {100, 20}, {120, 30}};
+    int n = sizeof(items) / sizeof(items[0]);
+    int capacity = 50;
+
+    float maxValue = fractionalKnapsack(capacity, items, n);
+
+    printf("Maximum value in knapsack = %.2f\n", maxValue);
+OUTPUT:
+Maximum value in knapsack = 240.00
+    return 0;
+}
